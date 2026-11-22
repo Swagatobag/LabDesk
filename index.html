@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LabDesk | Clinical Laboratory Management & Diagnostic Suite</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-logo">LD</div>
+        <div>
+          <h1 id="siteTitle">LabDesk</h1>
+          <span id="siteSubtitle">Clinical Ops & QC Suite</span>
+        </div>
+      </div>
+
+      <nav class="nav-menu" id="mainNav">
+        <button class="nav-item active" data-tab="dashboard">
+          <span class="nav-icon">📊</span> Dashboard & Alerts
+        </button>
+        <button class="nav-item" data-tab="calculators">
+          <span class="nav-icon">🧮</span> Clinical Calculators
+        </button>
+        <button class="nav-item" data-tab="qc">
+          <span class="nav-icon">📈</span> IQC & Westgard Rules
+        </button>
+        <button class="nav-item" data-tab="bmw">
+          <span class="nav-icon">☣️</span> BMW Segregation
+        </button>
+        <button class="nav-item" data-tab="gallery">
+          <span class="nav-icon">🖼️</span> Lab SOPs & Media
+        </button>
+        <!-- Custom Admin-Created Pages Render Here -->
+        <div id="customNavLinks"></div>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button class="admin-trigger-btn" id="openAdminModalBtn">
+          🔐 Admin Panel
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Workspace -->
+    <main class="main-content">
+      <header class="topbar">
+        <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
+        <div class="topbar-info">
+          <h2 id="pageHeaderTitle">Dashboard & Critical Alert Ranges</h2>
+          <p id="pageHeaderDesc">Quick bench reference, NABL panic thresholds & daily diagnostic utilities</p>
+        </div>
+        <div class="topbar-actions">
+          <span class="status-badge" id="adminStatusBadge">Guest View</span>
+          <button class="btn-secondary hidden" id="logoutBtn">Logout</button>
+        </div>
+      </header>
+
+      <!-- TAB 1: DASHBOARD & CRITICAL ALERTS -->
+      <section class="tab-panel active" id="tab-dashboard">
+        <div class="hero-banner" id="heroBanner">
+          <div>
+            <h3 id="welcomeHeading">Welcome to LabDesk Diagnostic Portal</h3>
+            <p id="welcomeBody">Standardized clinical calculators, Westgard IQC evaluation, and Bio-Medical Waste compliance for bench accuracy.</p>
+          </div>
+          <div class="quick-stats">
+            <div class="stat-pill"><span>8+</span> Calculators</div>
+            <div class="stat-pill"><span>6</span> Westgard Rules</div>
+            <div class="stat-pill"><span>4</span> BMW Categories</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3>🚨 NABL Critical (Panic) Alert Values</h3>
+            <input type="text" id="panicSearch" class="search-input" placeholder="Filter analyte (e.g., Potassium, Glucose, INR)..." />
+          </div>
+          <div class="table-wrap">
+            <table class="data-table" id="panicTable">
+              <thead>
+                <tr>
+                  <th>Parameter / Analyte</th>
+                  <th>Low Critical</th>
+                  <th>High Critical</th>
+                  <th>Unit</th>
+                  <th>Immediate Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td><strong>Potassium (K⁺)</strong></td><td class="crit-low">&lt; 2.8</td><td class="crit-high">&gt; 6.2</td><td>mmol/L</td><td>Verify hemolysis; notify clinician immediately</td></tr>
+                <tr><td><strong>Sodium (Na⁺)</strong></td><td class="crit-low">&lt; 120</td><td class="crit-high">&gt; 160</td><td>mmol/L</td><td>Repeat run; immediate critical call-out</td></tr>
+                <tr><td><strong>Glucose (Fasting/Random)</strong></td><td class="crit-low">&lt; 45</td><td class="crit-high">&gt; 450</td><td>mg/dL</td><td>Check sample tube (fluoride); alert ward/physician</td></tr>
+                <tr><td><strong>Calcium (Total)</strong></td><td class="crit-low">&lt; 6.5</td><td class="crit-high">&gt; 13.0</td><td>mg/dL</td><td>Check albumin & ionized Ca; notify clinician</td></tr>
+                <tr><td><strong>Hemoglobin (Hb)</strong></td><td class="crit-low">&lt; 6.0</td><td class="crit-high">&gt; 20.0</td><td>g/dL</td><td>Check clot/dilution; verify on peripheral smear</td></tr>
+                <tr><td><strong>Platelet Count</strong></td><td class="crit-low">&lt; 20,000</td><td class="crit-high">&gt; 10,00,000</td><td>/µL</td><td>Rule out platelet clumping on PBS before release</td></tr>
+                <tr><td><strong>WBC Count</strong></td><td class="crit-low">&lt; 1,500</td><td class="crit-high">&gt; 50,000</td><td>/µL</td><td>Perform manual differential smear review</td></tr>
+                <tr><td><strong>PT / INR</strong></td><td class="crit-low">—</td><td class="crit-high">&gt; 5.0</td><td>INR</td><td>Check anticoagulant therapy & sample fill volume</td></tr>
+                <tr><td><strong>Serum Bilirubin (Neonatal)</strong></td><td class="crit-low">—</td><td class="crit-high">&gt; 15.0</td><td>mg/dL</td><td>Immediate pediatric/NICU alert</td></tr>
+                <tr><td><strong>Troponin I / T</strong></td><td class="crit-low">—</td><td class="crit-high">Above 99th %ile URL</td><td>ng/mL</td><td>STAT cardiology/emergency notification</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: ALL CLINICAL CALCULATORS -->
+      <section class="tab-panel" id="tab-calculators">
+        <div class="calc-grid">
+          <!-- 1. PT / INR Calculator -->
+          <div class="card calc-card">
+            <div class="card-tag">Coagulation</div>
+            <h3>PT / INR Calculator</h3>
+            <div class="form-group">
+              <label>Patient PT (seconds)</label>
+              <input type="number" step="0.1" id="ptPatient" placeholder="e.g., 24.5" />
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Control / MNPT (sec)</label>
+                <input type="number" step="0.1" id="ptControl" value="12.5" />
+              </div>
+              <div class="form-group">
+                <label>Reagent ISI</label>
+                <input type="number" step="0.01" id="ptIsi" value="1.15" />
+              </div>
+            </div>
+            <button class="btn-primary" onclick="calcPTINR()">Calculate INR</button>
+            <div class="result-box" id="resPTINR">Result will appear here</div>
+          </div>
+
+          <!-- 2. eGFR (CKD-EPI 2021) -->
+          <div class="card calc-card">
+            <div class="card-tag">Renal</div>
+            <h3>eGFR (CKD-EPI 2021)</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Serum Creatinine (mg/dL)</label>
+                <input type="number" step="0.01" id="egfrCr" placeholder="e.g., 1.2" />
+              </div>
+              <div class="form-group">
+                <label>Age (years)</label>
+                <input type="number" id="egfrAge" placeholder="e.g., 45" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Biological Sex</label>
+              <select id="egfrSex">
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+              </select>
+            </div>
+            <button class="btn-primary" onclick="calcEGFR()">Calculate eGFR</button>
+            <div class="result-box" id="resEGFR">Result will appear here</div>
+          </div>
+
+          <!-- 3. Friedewald Lipid Profile -->
+          <div class="card calc-card">
+            <div class="card-tag">Biochemistry</div>
+            <h3>Lipid Profile (LDL & VLDL)</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Total Chol (mg/dL)</label>
+                <input type="number" id="lipTC" placeholder="e.g., 210" />
+              </div>
+              <div class="form-group">
+                <label>HDL (mg/dL)</label>
+                <input type="number" id="lipHDL" placeholder="e.g., 45" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Triglycerides (mg/dL)</label>
+              <input type="number" id="lipTG" placeholder="e.g., 160" />
+            </div>
+            <button class="btn-primary" onclick="calcLipid()">Calculate LDL / VLDL</button>
+            <div class="result-box" id="resLipid">Result will appear here</div>
+          </div>
+
+          <!-- 4. Corrected Calcium -->
+          <div class="card calc-card">
+            <div class="card-tag">Electrolytes</div>
+            <h3>Corrected Calcium</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Measured Ca (mg/dL)</label>
+                <input type="number" step="0.1" id="caMeas" placeholder="e.g., 7.8" />
+              </div>
+              <div class="form-group">
+                <label>Serum Albumin (g/dL)</label>
+                <input type="number" step="0.1" id="caAlb" placeholder="e.g., 2.8" />
+              </div>
+            </div>
+            <button class="btn-primary" onclick="calcCalcium()">Calculate Corrected Ca</button>
+            <div class="result-box" id="resCalcium">Result will appear here</div>
+          </div>
+
+          <!-- 5. Serum Osmolality & Gap -->
+          <div class="card calc-card">
+            <div class="card-tag">Critical Care</div>
+            <h3>Serum Osmolality & Gap</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Na⁺ (mmol/L)</label>
+                <input type="number" id="osmNa" placeholder="140" />
+              </div>
+              <div class="form-group">
+                <label>Glucose (mg/dL)</label>
+                <input type="number" id="osmGlu" placeholder="90" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>BUN (mg/dL)</label>
+                <input type="number" id="osmBun" placeholder="14" />
+              </div>
+              <div class="form-group">
+                <label>Measured Osm (optional)</label>
+                <input type="number" id="osmMeas" placeholder="290" />
+              </div>
+            </div>
+            <button class="btn-primary" onclick="calcOsmolality()">Calculate Osmolality</button>
+            <div class="result-box" id="resOsm">Result will appear here</div>
+          </div>
+
+          <!-- 6. RBC Indices (MCV, MCH, MCHC) -->
+          <div class="card calc-card">
+            <div class="card-tag">Hematology</div>
+            <h3>RBC Indices (MCV, MCH, MCHC)</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Hb (g/dL)</label>
+                <input type="number" step="0.1" id="rbcHb" placeholder="14.0" />
+              </div>
+              <div class="form-group">
+                <label>HCT / PCV (%)</label>
+                <input type="number" step="0.1" id="rbcHct" placeholder="42.0" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>RBC Count (million/µL)</label>
+              <input type="number" step="0.01" id="rbcCount" placeholder="4.80" />
+            </div>
+            <button class="btn-primary" onclick="calcRBC()">Calculate Indices</button>
+            <div class="result-box" id="resRBC">Result will appear here</div>
+          </div>
+
+          <!-- 7. Urea <-> BUN Converter -->
+          <div class="card calc-card">
+            <div class="card-tag">Renal</div>
+            <h3>Blood Urea ↔ BUN Converter</h3>
+            <div class="form-group">
+              <label>Value (mg/dL)</label>
+              <input type="number" step="0.1" id="ureaVal" placeholder="e.g., 30" />
+            </div>
+            <div class="form-group">
+              <label>Conversion Direction</label>
+              <select id="ureaDir">
+                <option value="ureaToBun">Blood Urea → BUN (÷ 2.14)</option>
+                <option value="bunToUrea">BUN → Blood Urea (× 2.14)</option>
+              </select>
+            </div>
+            <button class="btn-primary" onclick="calcUreaBun()">Convert</button>
+            <div class="result-box" id="resUrea">Result will appear here</div>
+          </div>
+
+          <!-- 8. Anion Gap Calculator -->
+          <div class="card calc-card">
+            <div class="card-tag">Electrolytes</div>
+            <h3>Serum Anion Gap</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Na⁺ (mmol/L)</label>
+                <input type="number" id="agNa" placeholder="140" />
+              </div>
+              <div class="form-group">
+                <label>Cl⁻ (mmol/L)</label>
+                <input type="number" id="agCl" placeholder="104" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>HCO₃⁻ (mmol/L)</label>
+              <input type="number" id="agHco3" placeholder="24" />
+            </div>
+            <button class="btn-primary" onclick="calcAnionGap()">Calculate Anion Gap</button>
+            <div class="result-box" id="resAG">Result will appear here</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 3: IQC & WESTGARD RULES -->
+      <section class="tab-panel" id="tab-qc">
+        <div class="two-col-grid">
+          <!-- Left: Mean, SD, CV% & Z-Score Evaluator -->
+          <div class="card">
+            <div class="card-tag">IQC Statistics</div>
+            <h3>QC CV% & Z-Score Rule Evaluator</h3>
+            <p class="muted-text">Enter comma-separated QC runs (or Target Mean & SD) to check Westgard status.</p>
+            <div class="form-group">
+              <label>QC Run Values (comma-separated, latest last)</label>
+              <input type="text" id="qcSeries" placeholder="e.g., 101, 99, 102, 104, 108" />
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Target Mean (optional)</label>
+                <input type="number" step="0.01" id="qcTargetMean" placeholder="Auto-calc if blank" />
+              </div>
+              <div class="form-group">
+                <label>Target SD (optional)</label>
+                <input type="number" step="0.01" id="qcTargetSd" placeholder="Auto-calc if blank" />
+              </div>
+            </div>
+            <button class="btn-primary" onclick="evaluateWestgard()">Analyze QC & Check Westgard</button>
+            <div class="result-box" id="resQC">Enter QC points to evaluate Mean, SD, CV% and Westgard flags.</div>
+          </div>
+
+          <!-- Right: Westgard Multi-Rule Reference Matrix -->
+          <div class="card">
+            <div class="card-tag">NABL / ISO 15189</div>
+            <h3>Westgard Multi-Rule Decision Guide</h3>
+            <div class="westgard-list">
+              <div class="wg-item wg-warn">
+                <div class="wg-badge">1-2s</div>
+                <div>
+                  <strong>Warning Rule (Random / Systematic)</strong>
+                  <p>One control observation exceeds Mean ± 2SD. Inspect other rules before rejecting run.</p>
+                </div>
+              </div>
+              <div class="wg-item wg-reject">
+                <div class="wg-badge">1-3s</div>
+                <div>
+                  <strong>Reject Run — Random Error</strong>
+                  <p>One control exceeds Mean ± 3SD. Do not release patient results; rerun control & check reagent/pipetting.</p>
+                </div>
+              </div>
+              <div class="wg-item wg-reject">
+                <div class="wg-badge">2-2s</div>
+                <div>
+                  <strong>Reject Run — Systematic Error</strong>
+                  <p>Two consecutive controls exceed +2SD or both exceed -2SD. Recalibrate analyzer or replace reagent lot.</p>
+                </div>
+              </div>
+              <div class="wg-item wg-reject">
+                <div class="wg-badge">R-4s</div>
+                <div>
+                  <strong>Reject Run — Random Error</strong>
+                  <p>Range between two controls in the same run exceeds 4SD (e.g., Level 1 &gt; +2SD and Level 2 &lt; -2SD).</p>
+                </div>
+              </div>
+              <div class="wg-item wg-reject">
+                <div class="wg-badge">4-1s</div>
+                <div>
+                  <strong>Reject Run — Systematic Shift</strong>
+                  <p>Four consecutive control results exceed +1SD or -1SD on the same side of the mean.</p>
+                </div>
+              </div>
+              <div class="wg-item wg-reject">
+                <div class="wg-badge">10-x</div>
+                <div>
+                  <strong>Reject Run — Systematic Bias</strong>
+                  <p>Ten consecutive control values fall on the same side of the mean (above or below).</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 4: BIO-MEDICAL WASTE (BMW) SEGREGATION -->
+      <section class="tab-panel" id="tab-bmw">
+        <div class="card mb-20">
+          <div class="card-header">
+            <h3>☣️ Bio-Medical Waste (BMW) Management Rules</h3>
+            <input type="text" id="bmwSearch" class="search-input" placeholder="Search waste item (e.g., Vacutainer, Needle, Cotton, Glass)..." />
+          </div>
+          <p class="muted-text">Color-coded segregation matrix for diagnostic laboratories per BMW Management Rules.</p>
+        </div>
+
+        <div class="bmw-grid" id="bmwGrid">
+          <div class="bmw-card bmw-yellow" data-keywords="yellow anatomical cotton gauze swab blood bag expired medicine culture plates">
+            <div class="bmw-header">
+              <span class="bmw-dot"></span>
+              <h4>YELLOW BAG / BIN</h4>
+            </div>
+            <p class="bmw-sub">Infectious & Anatomical Waste (Incineration / Deep Burial)</p>
+            <ul>
+              <li>Blood-soaked cotton swabs, gauze, bandages & dressings</li>
+              <li>Human anatomical / tissue biopsy waste</li>
+              <li>Discarded blood bags & clinical body fluid pouches</li>
+              <li>Microbiology culture plates, stocks & specimen swabs (pre-treated)</li>
+              <li>Expired or discarded cytotoxic/pharmaceutical medicines</li>
+            </ul>
+          </div>
+
+          <div class="bmw-card bmw-red" data-keywords="red plastic tubing syringe vacutainer pipette tips gloves catheter">
+            <div class="bmw-header">
+              <span class="bmw-dot"></span>
+              <h4>RED BAG / BIN</h4>
+            </div>
+            <p class="bmw-sub">Contaminated Recyclable Plastics (Autoclaving / Microwaving)</p>
+            <ul>
+              <li>Used plastic Vacutainers (EDTA, Citrate, Fluoride, Plain)</li>
+              <li>Disposable syringes (without needles), micropipette tips & cuvettes</li>
+              <li>Contaminated gloves, urine containers & sputum cups</li>
+              <li>IV sets, catheters, blood transfusion tubing</li>
+            </ul>
+          </div>
+
+          <div class="bmw-card bmw-white" data-keywords="white translucent puncture proof sharp needle scalpel lancet blade">
+            <div class="bmw-header">
+              <span class="b
